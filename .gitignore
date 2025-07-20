@@ -1,0 +1,116 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# React Build
+frontend/build/
+frontend/dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+logs/
+
+# Coverage
+coverage/
+.nyc_output
+
+# Dependencies
+package-lock.json
+yarn.lock
+
+# Temporary files
+.tmp/
+.temp/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Encryption keys
+*.key
+*.pem
+
+# Test artifacts
+test_*.py
+!test_api.py
+
+# Virtual environments
+myenv/
+venv/
+
+# Encryption keys and secure files
+*.enc
+*.key
+.encryption_key
+
+# Log files
+*.log
+backend.log
+frontend.log
+server.log
+
+# IDE and editor files
+.claude/
+.kiro/
+
+# Large dependencies
+node_modules/
+build/
+dist/
+
+# Database files  
+*.db
+app.db
+
+# Environment files
+.env
+.env.example
