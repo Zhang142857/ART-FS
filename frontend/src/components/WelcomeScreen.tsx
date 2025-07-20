@@ -1,15 +1,15 @@
 import React from 'react';
 import Logo from './Logo';
-import { useTheme } from '../hooks/useTheme';
-import { theme, getThemeColor } from '../styles/theme';
+
+import { theme } from '../styles/theme';
 
 interface WelcomeScreenProps {
   userName?: string;
 }
 
 const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ userName }) => {
-  const { isDarkMode } = useTheme();
-  const colors = getThemeColor(isDarkMode);
+  
+  
 
   const suggestions = [
     {
@@ -60,9 +60,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ userName }) => {
           left: '50%',
           width: '120px',
           height: '120px',
-          background: isDarkMode
-            ? 'radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%)'
-            : 'radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%)',
           filter: 'blur(40px)',
           transform: 'translate(-50%, -50%)',
           animation: 'pulse 4s ease-in-out infinite',
@@ -80,10 +78,10 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ userName }) => {
       <h1 style={{
         fontSize: theme.typography.fontSize['2xl'],
         fontWeight: theme.typography.fontWeight.bold,
-        color: colors.text,
+        color: theme.colors.text,
         marginBottom: theme.spacing[2],
         letterSpacing: '-0.02em',
-        background: `linear-gradient(135deg, ${theme.colors.primary[600]} 0%, ${theme.colors.primary[400]} 100%)`,
+        background: `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`,
         backgroundClip: 'text',
         WebkitBackgroundClip: 'text',
         WebkitTextFillColor: 'transparent',
@@ -95,7 +93,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ userName }) => {
 
       <p style={{
         fontSize: theme.typography.fontSize.base,
-        color: colors.textSecondary,
+        color: theme.colors.textSecondary,
         marginBottom: theme.spacing[6],
         maxWidth: '550px',
         textAlign: 'center',
@@ -119,8 +117,8 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ userName }) => {
           <button
             key={index}
             style={{
-              backgroundColor: colors.bgSecondary,
-              border: `1px solid ${colors.border}`,
+              backgroundColor: theme.colors.bgSecondary,
+              border: `1px solid ${theme.colors.border}`,
               borderRadius: theme.borderRadius.lg,
               padding: theme.spacing[4],
               textAlign: 'left',
@@ -133,12 +131,12 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ userName }) => {
               minHeight: '120px',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = theme.colors.primary[500];
+              e.currentTarget.style.borderColor = theme.colors.primary;
               e.currentTarget.style.transform = 'translateY(-2px)';
               e.currentTarget.style.boxShadow = theme.shadows.md;
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = colors.border;
+              e.currentTarget.style.borderColor = theme.colors.border;
               e.currentTarget.style.transform = 'translateY(0)';
               e.currentTarget.style.boxShadow = 'none';
             }}
@@ -165,7 +163,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ userName }) => {
             <h3 style={{
               fontSize: theme.typography.fontSize.sm,
               fontWeight: theme.typography.fontWeight.semibold,
-              color: colors.text,
+              color: theme.colors.text,
               marginBottom: theme.spacing[1],
             }}>
               {suggestion.title}
@@ -174,7 +172,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ userName }) => {
             {/* 描述 - 缩小字体 */}
             <p style={{
               fontSize: theme.typography.fontSize.xs,
-              color: colors.textSecondary,
+              color: theme.colors.textSecondary,
               lineHeight: theme.typography.lineHeight.normal,
             }}>
               {suggestion.prompt}
@@ -200,7 +198,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ userName }) => {
         display: 'flex',
         alignItems: 'center',
         gap: theme.spacing[2],
-        color: colors.textTertiary,
+        color: theme.colors.textSecondary,
         fontSize: theme.typography.fontSize.xs,
         animation: 'fadeIn 1s ease-out 0.8s both',
         flexShrink: 0,

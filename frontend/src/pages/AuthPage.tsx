@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../hooks/useAuth';
+
+import { useAuthStore } from '../store/useAuthStore';
 import Logo from '../components/Logo';
-import { useTheme } from '../hooks/useTheme';
+
 
 interface AuthPageProps {
   onSuccess?: () => void;
@@ -18,9 +19,9 @@ const AuthPage: React.FC<AuthPageProps> = ({ onSuccess }) => {
   });
   const [errors, setErrors] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { login, register, isLoading } = useAuth();
-  const { isDarkMode } = useTheme();
-  const isDark = isDarkMode;
+  const { login, register, isLoading } = useAuthStore();
+  
+  const isDark = false;
 
   const validateForm = () => {
     const newErrors: string[] = [];

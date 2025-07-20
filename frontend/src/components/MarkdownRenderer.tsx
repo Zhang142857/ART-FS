@@ -5,6 +5,10 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
 
+import 'katex/dist/katex.min.css';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { coldarkDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
 interface MarkdownRendererProps {
   content: string;
   className?: string;
@@ -12,6 +16,10 @@ interface MarkdownRendererProps {
 }
 
 const MarkdownRenderer: React.FC<MarkdownRendererProps> = memo(({ content, className, style }) => {
+  const handleCopy = (code: string) => {
+    navigator.clipboard.writeText(code);
+  };
+
   return (
     <div className={className} style={style}>
       <ReactMarkdown
@@ -20,45 +28,42 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = memo(({ content, class
         components={{
           code({ children, className, ...props }: any) {
             const match = /language-(\w+)/.exec(className || '');
-            
-            if (match) {
-              // 代码块
-              return (
-                <pre style={{
-                  backgroundColor: '#1e1e1e',
-                  padding: '16px',
-                  borderRadius: '8px',
-                  overflow: 'auto',
-                  margin: '16px 0',
-                }}>
-                  <code style={{
-                    color: '#d4d4d4',
-                    fontFamily: 'Monaco, Menlo, "Ubuntu Mono", monospace',
-                    fontSize: '14px',
-                  }}>
-                    {children}
-                  </code>
-                </pre>
-              );
-            }
-            
-            // 内联代码
-            return (
-              <code 
-                className={className}
-                style={{
-                  backgroundColor: '#f1f5f9',
-                  padding: '2px 6px',
-                  borderRadius: '4px',
-                  fontSize: '0.9em',
-                  fontFamily: 'Monaco, Menlo, "Ubuntu Mono", monospace',
-                }}
-                {...props}
-              >
+            const codeString = String(children).replace(/\n$/, '');
+
+            return match ? (
+              <div style={{ position: 'relative' }}>
+                <SyntaxHighlighter
+                  style={coldarkDark}
+                  language={match[1]}
+                  PreTag="div"
+                  {...props}
+                >
+                  {codeString}
+                </SyntaxHighlighter>
+                <button
+                  onClick={() => handleCopy(codeString)}
+                  style={{
+                    position: 'absolute',
+                    top: '8px',
+                    right: '8px',
+                    background: '#333',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    padding: '4px 8px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Copy
+                </button>
+              </div>
+            ) : (
+              <code className={className} {...props}>
                 {children}
               </code>
             );
           },
+
           blockquote({ children, ...props }: any) {
             return (
               <blockquote

@@ -20,8 +20,8 @@ export const useSettings = () => {
         ApiService.getProviders(),
       ]);
 
-      setSettings(settingsData);
-      setModels(modelsData);
+      setSettings(settingsData.data);
+      setModels(modelsData.data);
       setProviders(providersData.data);
     } catch (err) {
       setError(err instanceof Error ? err.message : '加载设置失败');
@@ -39,14 +39,14 @@ export const useSettings = () => {
 
       const response = await ApiService.updateSettings(updates);
       
-      if (response.success) {
+      if (response.data.success) {
         // 重新加载设置
         await loadSettings();
         
         // 重新加载配置
         await ApiService.reloadConfig();
       } else {
-        throw new Error(response.message);
+        throw new Error(response.data.message);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : '更新设置失败');
@@ -62,11 +62,11 @@ export const useSettings = () => {
       const response = await ApiService.testConnection();
       
       // 如果测试成功且返回了模型列表，更新models状态
-      if (response.success && response.data && response.data.models) {
-        setModels(response.data.models);
+      if (response.data.success && response.data.data && response.data.data.models) {
+        setModels(response.data.data.models);
       }
       
-      return response;
+      return response.data;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : '测试连接失败';
       setError(errorMessage);

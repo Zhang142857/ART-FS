@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useStore } from '../store/useStore';
+import { useAuthStore } from '../store/useAuthStore';
 import { useSettings } from '../hooks/useSettings';
-import { useAuth } from '../hooks/useAuth';
-import { useTheme } from '../hooks/useTheme';
+
+
 
 interface User {
   id: number;
@@ -31,8 +33,9 @@ const Header: React.FC<HeaderProps> = ({
   isAuthenticated 
 }) => {
   const { settings, models } = useSettings();
-  const { logout } = useAuth();
-  const { isDarkMode, toggleDarkMode } = useTheme();
+  const { logout } = useAuthStore();
+  const { theme, toggleTheme } = useStore();
+  
   const [showUserMenu, setShowUserMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -286,42 +289,26 @@ const Header: React.FC<HeaderProps> = ({
                   </span>
                 </div>
                 
-                {/* 深色模式切换 */}
+                
+                
                 <button
-                  onClick={toggleDarkMode}
+                  onClick={toggleTheme}
                   style={{
                     width: '100%',
                     padding: '12px 16px',
-                    backgroundColor: 'transparent',
                     border: 'none',
-                    borderBottom: '1px solid #f0f0f0',
-                    color: '#1a1a1a',
+                    background: 'transparent',
+                    color: theme === 'dark' ? '#ffffff' : '#374151',
+                    textAlign: 'left',
                     cursor: 'pointer',
                     fontSize: '14px',
-                    fontWeight: '500',
-                    transition: 'all 0.2s ease',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    textAlign: 'left',
+                    borderRadius: '8px',
+                    transition: 'background-color 0.2s ease',
                   }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#f8f9fa';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = theme === 'dark' ? '#4b5563' : '#f3f4f6'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                 >
-                  {isDarkMode ? (
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <path d="M8 4.5V2M8 14V11.5M3.5 8H1M15 8H12.5M5.2 5.2L3.4 3.4M12.6 12.6L10.8 10.8M5.2 10.8L3.4 12.6M12.6 3.4L10.8 5.2M10.5 8C10.5 9.38071 9.38071 10.5 8 10.5C6.61929 10.5 5.5 9.38071 5.5 8C5.5 6.61929 6.61929 5.5 8 5.5C9.38071 5.5 10.5 6.61929 10.5 8Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  ) : (
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <path d="M13.5 8.4C13.3 10.8 11.1 12.8 8.5 12.8C5.7 12.8 3.5 10.6 3.5 7.8C3.5 5.2 5.5 3 7.9 2.8C7.6 3.3 7.5 3.9 7.5 4.5C7.5 6.7 9.3 8.5 11.5 8.5C12.1 8.5 12.7 8.4 13.2 8.1C13.4 8.2 13.5 8.3 13.5 8.4Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  )}
-                  {isDarkMode ? '浅色模式' : '深色模式'}
+                  {theme === 'dark' ? '☀️ 亮色模式' : '🌙 深色模式'}
                 </button>
                 
                 {/* 退出登录 */}

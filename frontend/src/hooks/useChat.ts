@@ -18,7 +18,7 @@ export const useChat = (sessionId?: string) => {
 
   const loadSessionMessages = useCallback(async (sessionId: string) => {
     try {
-      const sessionData = await ApiService.getChatSession(sessionId);
+      const sessionData = (await ApiService.getChatSession(sessionId)).data;
       if (sessionData.messages) {
         setMessages(sessionData.messages);
       }
@@ -31,7 +31,7 @@ export const useChat = (sessionId?: string) => {
 
   const createNewSession = useCallback(async (title?: string) => {
     try {
-      const newSession = await ApiService.createChatSession(title);
+      const newSession = (await ApiService.createChatSession(title)).data;
       setCurrentSessionId(newSession.id);
       setMessages([]);
       return newSession;
@@ -113,7 +113,7 @@ export const useChat = (sessionId?: string) => {
       });
 
       // 获取流式响应
-      const stream = await ApiService.chatStream(request);
+      const stream = (await ApiService.chatStream(request)).data;
       const reader = stream.getReader();
       const decoder = new TextDecoder();
 

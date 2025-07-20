@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSettings } from '../hooks/useSettings';
+import ModelSelector from '../components/ModelSelector';
 
 interface SettingsProps {
   onClose: () => void;
@@ -18,11 +19,6 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
 
   const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  
-  // 模型搜索相关状态
-  const [modelSearchTerm, setModelSearchTerm] = useState('');
-  const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
-  const [filteredModels, setFilteredModels] = useState<any[]>([]);
 
   useEffect(() => {
     if (settings) {
@@ -35,44 +31,6 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
       });
     }
   }, [settings]);
-
-  // 过滤模型列表
-  useEffect(() => {
-    if (!models) {
-      setFilteredModels([]);
-      return;
-    }
-
-    const filtered = models.filter(model => {
-      const searchLower = modelSearchTerm.toLowerCase();
-      return model.id.toLowerCase().includes(searchLower) || 
-             model.name.toLowerCase().includes(searchLower) ||
-             (model.category && model.category.toLowerCase().includes(searchLower));
-    });
-
-    // 按分类排序
-    const grouped = filtered.reduce((acc, model) => {
-      const category = model.category || 'Other';
-      if (!acc[category]) acc[category] = [];
-      acc[category].push(model);
-      return acc;
-    }, {} as Record<string, any[]>);
-
-    // 将分组转换为扁平列表，但保持分类信息
-    const sortedModels: any[] = [];
-    const categoryOrder = ['OpenAI', 'Claude', 'Qwen', 'DeepSeek', 'Gemini', '01.AI', 'Moonshot', 'Doubao', 'ERNIE', 'SparkDesk', 'Image', 'Audio', 'Embedding', 'Other'];
-    
-    categoryOrder.forEach(category => {
-      if (grouped[category]) {
-        // 添加分类头
-        sortedModels.push({ isCategory: true, category });
-        // 添加该分类下的模型
-        grouped[category].forEach(model => sortedModels.push(model));
-      }
-    });
-
-    setFilteredModels(sortedModels);
-  }, [models, modelSearchTerm]);
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({
@@ -305,161 +263,11 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
             }}>
               🤖 模型 ({models.length} 个可用)
             </label>
-            
-            {/* 可搜索的模型选择器 */}
-            <div style={{ position: 'relative' }}>
-              {/* 搜索输入框 */}
-              <input
-                type="text"
-                value={modelSearchTerm}
-                onChange={(e) => setModelSearchTerm(e.target.value)}
-                placeholder="搜索模型... (例如: gpt-4, claude, qwen)"
-                style={{
-                  width: '100%',
-                  padding: '14px 40px 14px 14px',
-                  border: '2px solid #e5e7eb',
-                  borderRadius: '12px',
-                  fontSize: '14px',
-                  backgroundColor: '#ffffff',
-                  color: '#111827',
-                  transition: 'all 0.2s ease',
-                  outline: 'none',
-                  boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-                }}
-                onFocus={(e) => {
-                  setIsModelDropdownOpen(true);
-                  e.target.style.borderColor = '#3b82f6';
-                  e.target.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1), 0 0 0 3px rgba(59, 130, 246, 0.1)';
-                }}
-                onBlur={(e) => {
-                  // 延迟关闭下拉框，以便用户可以点击选项
-                  setTimeout(() => setIsModelDropdownOpen(false), 200);
-                  e.target.style.borderColor = '#e5e7eb';
-                  e.target.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)';
-                }}
-              />
-              
-              {/* 搜索图标 */}
-              <div style={{
-                position: 'absolute',
-                right: '14px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                color: '#9ca3af',
-                fontSize: '16px',
-                pointerEvents: 'none',
-              }}>
-                🔍
-              </div>
-              
-              {/* 当前选中的模型显示 */}
-              {formData.current_model && !isModelDropdownOpen && (
-                <div style={{
-                  position: 'absolute',
-                  top: '100%',
-                  left: 0,
-                  right: 0,
-                  marginTop: '4px',
-                  padding: '8px 12px',
-                  backgroundColor: '#f0f9ff',
-                  border: '1px solid #0ea5e9',
-                  borderRadius: '8px',
-                  fontSize: '12px',
-                  color: '#0369a1',
-                  fontWeight: '500',
-                }}>
-                  当前选中: {formData.current_model}
-                </div>
-              )}
-              
-              {/* 下拉选项列表 */}
-              {isModelDropdownOpen && (
-                <div style={{
-                  position: 'absolute',
-                  top: '100%',
-                  left: 0,
-                  right: 0,
-                  backgroundColor: '#ffffff',
-                  border: '2px solid #e5e7eb',
-                  borderRadius: '12px',
-                  marginTop: '4px',
-                  maxHeight: '300px',
-                  overflowY: 'auto',
-                  zIndex: 1000,
-                  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
-                }}>
-                  {filteredModels.length === 0 ? (
-                    <div style={{
-                      padding: '16px',
-                      textAlign: 'center',
-                      color: '#9ca3af',
-                      fontSize: '14px',
-                    }}>
-                      未找到匹配的模型
-                    </div>
-                  ) : (
-                    filteredModels.map((item, index) => (
-                      item.isCategory ? (
-                        <div
-                          key={`category-${item.category}`}
-                          style={{
-                            padding: '8px 16px',
-                            backgroundColor: '#f8fafc',
-                            borderBottom: '1px solid #e5e7eb',
-                            fontSize: '12px',
-                            fontWeight: '600',
-                            color: '#64748b',
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.05em',
-                          }}
-                        >
-                          {item.category}
-                        </div>
-                      ) : (
-                        <div
-                          key={item.id}
-                          onClick={() => {
-                            handleInputChange('current_model', item.id);
-                            setModelSearchTerm('');
-                            setIsModelDropdownOpen(false);
-                          }}
-                          style={{
-                            padding: '12px 16px',
-                            cursor: 'pointer',
-                            borderBottom: '1px solid #f1f5f9',
-                            backgroundColor: formData.current_model === item.id ? '#eff6ff' : '#ffffff',
-                            color: formData.current_model === item.id ? '#1d4ed8' : '#374151',
-                            fontSize: '14px',
-                            transition: 'all 0.15s ease',
-                          }}
-                          onMouseEnter={(e) => {
-                            if (formData.current_model !== item.id) {
-                              e.currentTarget.style.backgroundColor = '#f8fafc';
-                            }
-                          }}
-                          onMouseLeave={(e) => {
-                            if (formData.current_model !== item.id) {
-                              e.currentTarget.style.backgroundColor = '#ffffff';
-                            }
-                          }}
-                        >
-                          <div style={{ fontWeight: '500' }}>{item.id}</div>
-                          {item.description && (
-                            <div style={{
-                              fontSize: '12px',
-                              color: '#6b7280',
-                              marginTop: '2px',
-                            }}>
-                              {item.description}
-                            </div>
-                          )}
-                        </div>
-                      )
-                    ))
-                  )}
-                </div>
-              )}
-            </div>
+            <ModelSelector
+              value={formData.current_model}
+              onChange={(modelId) => handleInputChange('current_model', modelId)}
+              provider={formData.current_provider}
+            />
           </div>
 
           <div style={{ marginBottom: '20px' }}>

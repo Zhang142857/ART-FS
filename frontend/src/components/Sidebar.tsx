@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Logo from './Logo';
-import { useTheme } from '../hooks/useTheme';
-import { theme, getThemeColor } from '../styles/theme';
+
+import { theme } from '../styles/theme';
 
 interface ChatSession {
   id: string;
@@ -28,8 +28,6 @@ const Sidebar: React.FC<SidebarProps> = ({
   currentSession,
   onSessionSelect,
 }) => {
-  const { isDarkMode } = useTheme();
-  const colors = getThemeColor(isDarkMode);
   
   const [sessions] = useState<ChatSession[]>([
     {
@@ -70,18 +68,18 @@ const Sidebar: React.FC<SidebarProps> = ({
     top: 0,
     width: '320px',
     height: '100vh',
-    backgroundColor: colors.bgSecondary,
+    backgroundColor: theme.colors.bgSecondary,
     transition: theme.transitions.slow,
     zIndex: theme.zIndex.sticky,
     display: 'flex',
     flexDirection: 'column' as const,
-    borderRight: `1px solid ${colors.border}`,
+    borderRight: `1px solid ${theme.colors.border}`,
     boxShadow: isOpen ? theme.shadows.xl : 'none',
   };
 
   const newChatButtonStyle = {
     width: '100%',
-    background: `linear-gradient(135deg, ${theme.colors.primary[500]} 0%, ${theme.colors.primary[600]} 100%)`,
+    background: `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`,
     color: '#ffffff',
     border: 'none',
     borderRadius: theme.borderRadius.md,
@@ -100,9 +98,9 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   const sessionButtonStyle = (isSelected: boolean) => ({
     width: '100%',
-    backgroundColor: isSelected ? colors.bgTertiary : 'transparent',
-    color: colors.text,
-    border: `1px solid ${isSelected ? colors.border : 'transparent'}`,
+    backgroundColor: isSelected ? theme.colors.bgTertiary : 'transparent',
+    color: theme.colors.text,
+    border: `1px solid ${isSelected ? theme.colors.border : 'transparent'}`,
     borderRadius: theme.borderRadius.md,
     padding: theme.spacing[4],
     cursor: 'pointer',
@@ -122,8 +120,8 @@ const Sidebar: React.FC<SidebarProps> = ({
         {/* 顶部区域 */}
         <div style={{
           padding: theme.spacing[5],
-          borderBottom: `1px solid ${colors.border}`,
-          background: `linear-gradient(180deg, ${colors.bg} 0%, ${colors.bgSecondary} 100%)`,
+          borderBottom: `1px solid ${theme.colors.border}`,
+          background: `linear-gradient(180deg, ${theme.colors.background} 0%, ${theme.colors.bgSecondary} 100%)`,
         }}>
           <div style={{ marginBottom: theme.spacing[4] }}>
             <Logo size={32} showText={true} animated={true} />
@@ -171,11 +169,11 @@ const Sidebar: React.FC<SidebarProps> = ({
         }}>
           <div style={{
             fontSize: theme.typography.fontSize.xs,
-            color: colors.textTertiary,
+            color: theme.colors.textSecondary,
             padding: `0 ${theme.spacing[2]} ${theme.spacing[3]}`,
             textTransform: 'uppercase',
             letterSpacing: '0.05em',
-            fontWeight: theme.typography.fontWeight.medium,
+            fontWeight: theme.typography.fontWeight.semibold,
           }}>
             最近对话
           </div>
@@ -195,8 +193,8 @@ const Sidebar: React.FC<SidebarProps> = ({
                 }}
                 onMouseEnter={(e) => {
                   if (currentSession !== session.id) {
-                    e.currentTarget.style.backgroundColor = colors.bgTertiary;
-                    e.currentTarget.style.borderColor = colors.border;
+                    e.currentTarget.style.backgroundColor = theme.colors.bgTertiary;
+                    e.currentTarget.style.borderColor = theme.colors.border;
                     e.currentTarget.style.transform = 'translateX(4px)';
                   }
                 }}
@@ -215,17 +213,17 @@ const Sidebar: React.FC<SidebarProps> = ({
                     right: theme.spacing[3],
                     width: '8px',
                     height: '8px',
-                    backgroundColor: theme.colors.success,
+                    backgroundColor: theme.colors.secondary,
                     borderRadius: theme.borderRadius.full,
-                    boxShadow: `0 0 12px ${theme.colors.success}`,
+                    boxShadow: `0 0 12px ${theme.colors.secondary}`,
                     animation: 'glow 2s ease-in-out infinite',
                   }} />
                 )}
                 
                 <div style={{
                   fontSize: theme.typography.fontSize.sm,
-                  fontWeight: theme.typography.fontWeight.medium,
-                  color: colors.text,
+                  fontWeight: theme.typography.fontWeight.semibold,
+                  color: theme.colors.text,
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
@@ -236,7 +234,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 
                 <div style={{
                   fontSize: theme.typography.fontSize.xs,
-                  color: colors.textSecondary,
+                  color: theme.colors.textSecondary,
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
@@ -247,7 +245,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 
                 <div style={{
                   fontSize: '11px',
-                  color: colors.textTertiary,
+                  color: theme.colors.textSecondary,
                   marginTop: theme.spacing[1],
                 }}>
                   {formatTime(session.timestamp)}
@@ -263,7 +261,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             left: 0,
             right: 0,
             height: '40px',
-            background: `linear-gradient(to top, ${colors.bgSecondary}, transparent)`,
+            background: `linear-gradient(to top, ${theme.colors.bgSecondary}, transparent)`,
             pointerEvents: 'none',
           }} />
         </div>
@@ -271,20 +269,20 @@ const Sidebar: React.FC<SidebarProps> = ({
         {/* 底部设置区 */}
         <div style={{
           padding: theme.spacing[5],
-          borderTop: `1px solid ${colors.border}`,
-          background: `linear-gradient(180deg, ${colors.bgSecondary} 0%, ${colors.bg} 100%)`,
+          borderTop: `1px solid ${theme.colors.border}`,
+          background: `linear-gradient(180deg, ${theme.colors.bgSecondary} 0%, ${theme.colors.background} 100%)`,
         }}>
           <button
             onClick={onSettingsClick}
             style={{
               width: '100%',
               backgroundColor: 'transparent',
-              color: colors.textSecondary,
-              border: `1px solid ${colors.border}`,
+              color: theme.colors.textSecondary,
+              border: `1px solid ${theme.colors.border}`,
               borderRadius: theme.borderRadius.md,
               padding: `${theme.spacing[3]} ${theme.spacing[5]}`,
               fontSize: theme.typography.fontSize.sm,
-              fontWeight: theme.typography.fontWeight.medium,
+              fontWeight: theme.typography.fontWeight.semibold,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -293,15 +291,15 @@ const Sidebar: React.FC<SidebarProps> = ({
               transition: theme.transitions.base,
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = colors.bgTertiary;
-              e.currentTarget.style.borderColor = colors.borderHover;
-              e.currentTarget.style.color = colors.text;
+              e.currentTarget.style.backgroundColor = theme.colors.bgTertiary;
+              e.currentTarget.style.borderColor = theme.colors.borderHover;
+              e.currentTarget.style.color = theme.colors.text;
               e.currentTarget.style.transform = 'translateY(-1px)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.backgroundColor = 'transparent';
-              e.currentTarget.style.borderColor = colors.border;
-              e.currentTarget.style.color = colors.textSecondary;
+              e.currentTarget.style.borderColor = theme.colors.border;
+              e.currentTarget.style.color = theme.colors.textSecondary;
               e.currentTarget.style.transform = 'translateY(0)';
             }}
           >
@@ -372,12 +370,12 @@ const Sidebar: React.FC<SidebarProps> = ({
           }
           
           ::-webkit-scrollbar-thumb {
-            background: ${colors.border};
+            background: ${theme.colors.border};
             border-radius: 3px;
           }
           
           ::-webkit-scrollbar-thumb:hover {
-            background: ${colors.borderHover};
+            background: ${theme.colors.borderHover};
           }
         `}
       </style>

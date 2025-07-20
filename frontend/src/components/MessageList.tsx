@@ -3,9 +3,10 @@ import { Message } from '../types';
 import Logo from './Logo';
 import WelcomeScreen from './WelcomeScreen';
 import MarkdownRenderer from './MarkdownRenderer';
-import { useTheme } from '../hooks/useTheme';
-import { theme, getThemeColor } from '../styles/theme';
-import { useAuth } from '../hooks/useAuth';
+
+import { useAuthStore } from '../store/useAuthStore';
+import { theme } from '../styles/theme';
+
 
 interface MessageListProps {
   messages: Message[];
@@ -14,9 +15,8 @@ interface MessageListProps {
 
 const MessageList: React.FC<MessageListProps> = ({ messages, isLoading }) => {
   const endRef = useRef<HTMLDivElement>(null);
-  const { isDarkMode } = useTheme();
-  const colors = getThemeColor(isDarkMode);
-  const { user } = useAuth();
+  
+  const { user } = useAuthStore();
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -34,7 +34,7 @@ const MessageList: React.FC<MessageListProps> = ({ messages, isLoading }) => {
       <div style={{
         flex: 1,
         overflow: 'auto',
-        backgroundColor: colors.bg,
+        backgroundColor: theme.colors.background,
         position: 'relative',
         transition: theme.transitions.base,
       }}>
@@ -68,7 +68,7 @@ const MessageList: React.FC<MessageListProps> = ({ messages, isLoading }) => {
                   borderRadius: '50%',
                   background: message.role === 'user' 
                     ? `linear-gradient(135deg, ${theme.colors.neutral[700]} 0%, ${theme.colors.neutral[600]} 100%)`
-                    : `linear-gradient(135deg, ${theme.colors.primary[500]} 0%, ${theme.colors.primary[600]} 100%)`,
+                    : `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -115,14 +115,14 @@ const MessageList: React.FC<MessageListProps> = ({ messages, isLoading }) => {
                     <span style={{
                       fontSize: theme.typography.fontSize.base,
                       fontWeight: theme.typography.fontWeight.semibold,
-                      color: colors.text,
+                      color: theme.colors.text,
                     }}>
                       {message.role === 'user' ? '你' : 'NeuralChat'}
                     </span>
                     <span style={{
                       fontSize: theme.typography.fontSize.xs,
-                      color: colors.textSecondary,
-                      backgroundColor: colors.bgSecondary,
+                      color: theme.colors.textSecondary,
+                      backgroundColor: theme.colors.bgSecondary,
                       padding: `${theme.spacing[1]} ${theme.spacing[2]}`,
                       borderRadius: theme.borderRadius.full,
                     }}>
@@ -131,13 +131,13 @@ const MessageList: React.FC<MessageListProps> = ({ messages, isLoading }) => {
                   </div>
                   
                   <div style={{
-                    backgroundColor: message.role === 'user' ? colors.bgSecondary : 'transparent',
+                    backgroundColor: message.role === 'user' ? theme.colors.bgSecondary : 'transparent',
                     padding: message.role === 'user' ? `${theme.spacing[4]} ${theme.spacing[5]}` : '0',
                     borderRadius: message.role === 'user' ? theme.borderRadius.lg : '0',
-                    border: message.role === 'user' ? `1px solid ${colors.border}` : 'none',
+                    border: message.role === 'user' ? `1px solid ${theme.colors.border}` : 'none',
                     fontSize: theme.typography.fontSize.base,
                     lineHeight: theme.typography.lineHeight.relaxed,
-                    color: colors.text,
+                    color: theme.colors.text,
                     wordBreak: 'break-word',
                     fontWeight: theme.typography.fontWeight.normal,
                     position: 'relative',
@@ -145,14 +145,14 @@ const MessageList: React.FC<MessageListProps> = ({ messages, isLoading }) => {
                   }}
                   onMouseEnter={(e) => {
                     if (message.role === 'user') {
-                      e.currentTarget.style.backgroundColor = colors.bgTertiary;
-                      e.currentTarget.style.borderColor = colors.borderHover;
+                      e.currentTarget.style.backgroundColor = theme.colors.bgTertiary;
+                      e.currentTarget.style.borderColor = theme.colors.borderHover;
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (message.role === 'user') {
-                      e.currentTarget.style.backgroundColor = colors.bgSecondary;
-                      e.currentTarget.style.borderColor = colors.border;
+                      e.currentTarget.style.backgroundColor = theme.colors.bgSecondary;
+                      e.currentTarget.style.borderColor = theme.colors.border;
                     }
                   }}
                   >
@@ -181,7 +181,7 @@ const MessageList: React.FC<MessageListProps> = ({ messages, isLoading }) => {
                 width: '40px',
                 height: '40px',
                 borderRadius: '50%',
-                background: `linear-gradient(135deg, ${theme.colors.primary[500]} 0%, ${theme.colors.primary[600]} 100%)`,
+                background: `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -211,14 +211,14 @@ const MessageList: React.FC<MessageListProps> = ({ messages, isLoading }) => {
                   <span style={{
                     fontSize: theme.typography.fontSize.base,
                     fontWeight: theme.typography.fontWeight.semibold,
-                    color: colors.text,
+                    color: theme.colors.text,
                   }}>
                     NeuralChat
                   </span>
                   <span style={{
                     fontSize: theme.typography.fontSize.xs,
-                    color: colors.textSecondary,
-                    backgroundColor: colors.bgSecondary,
+                    color: theme.colors.textSecondary,
+                    backgroundColor: theme.colors.bgSecondary,
                     padding: `${theme.spacing[1]} ${theme.spacing[2]}`,
                     borderRadius: theme.borderRadius.full,
                     animation: 'textPulse 1.5s ease-in-out infinite',
@@ -236,21 +236,21 @@ const MessageList: React.FC<MessageListProps> = ({ messages, isLoading }) => {
                   <div style={{
                     width: '10px',
                     height: '10px',
-                    backgroundColor: theme.colors.primary[500],
+                    backgroundColor: theme.colors.primary,
                     borderRadius: '50%',
                     animation: 'typingDots 1.4s ease-in-out infinite',
                   }} />
                   <div style={{
                     width: '10px',
                     height: '10px',
-                    backgroundColor: theme.colors.primary[500],
+                    backgroundColor: theme.colors.primary,
                     borderRadius: '50%',
                     animation: 'typingDots 1.4s ease-in-out infinite 0.2s',
                   }} />
                   <div style={{
                     width: '10px',
                     height: '10px',
-                    backgroundColor: theme.colors.primary[500],
+                    backgroundColor: theme.colors.primary,
                     borderRadius: '50%',
                     animation: 'typingDots 1.4s ease-in-out infinite 0.4s',
                   }} />

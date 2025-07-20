@@ -3,7 +3,7 @@
 ## 📋 项目概述
 GitHub仓库：https://github.com/Zhang142857/ART-FS  
 这是一个AI对话系统，后端API已完成，需要Gemini协助优化前端体验。
-
+github token: <REDACTED>
 ## 🚀 快速开始
 
 ### 1. 克隆项目

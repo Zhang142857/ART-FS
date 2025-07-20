@@ -6,8 +6,9 @@ import MessageList from '../components/MessageList';
 import MessageInput from '../components/MessageInput';
 import Settings from './Settings';
 import { useChat } from '../hooks/useChat';
+import { useAuthStore } from '../store/useAuthStore';
 import { useSettings } from '../hooks/useSettings';
-import { useAuth } from '../hooks/useAuth';
+
 
 interface ChatPageProps {
   onLogout?: () => void;
@@ -19,7 +20,7 @@ const ChatPage: React.FC<ChatPageProps> = ({ onLogout }) => {
   const [currentSession, setCurrentSession] = useState<string>('1');
   const { messages, isLoading, error, sendMessage, stopGeneration, clearChat } = useChat();
   const { settings } = useSettings();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuthStore();
 
   // 获取问候语
   const getGreeting = () => {

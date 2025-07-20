@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../hooks/useAuth';
+
+import { useAuthStore } from '../store/useAuthStore';
 import Logo from '../components/Logo';
 
 interface WelcomePageProps {
@@ -8,7 +9,7 @@ interface WelcomePageProps {
 }
 
 const WelcomePage: React.FC<WelcomePageProps> = ({ onStartChat, onShowAuth }) => {
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuthStore();
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {

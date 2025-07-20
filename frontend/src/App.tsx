@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { AuthProvider, useAuth } from './hooks/useAuth';
-import { ThemeProvider } from './hooks/useTheme';
+
+import { useAuthStore } from './store/useAuthStore';
+import { ThemeProvider } from './styles/ThemeProvider';
 import AuthPage from './pages/AuthPage';
 import ChatPage from './pages/ChatPage';
 
 type AppView = 'auth' | 'chat';
 
 const AppContent: React.FC = () => {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading } = useAuthStore();
   const [currentView, setCurrentView] = useState<AppView | null>(null);
 
   // 根据登录状态设置初始视图
@@ -104,9 +105,7 @@ const AppContent: React.FC = () => {
 const App: React.FC = () => {
   return (
     <ThemeProvider>
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
+      <AppContent />
     </ThemeProvider>
   );
 };
